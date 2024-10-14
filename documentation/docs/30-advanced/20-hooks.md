@@ -3,24 +3,26 @@ title: Hooks
 ---
 
 'Hooks' are app-wide functions you declare that SvelteKit will call in response to specific events, giving you fine-grained control over the framework's behaviour.
+'Hooks'란, 사용자가 정의하는 함수로, SvelteKit은 특정 이벤트시 이 함수를 실행시켜서 프레임워크의 작동을 세밀하게 조절할 수 있게 해 줍니다.
 
-There are three hooks files, all optional:
+세가지 hooks 파일이 존재하는데, 이 중 필요한 것만 만들면 됩니다.
 
-- `src/hooks.server.js` — your app's server hooks
-- `src/hooks.client.js` — your app's client hooks
-- `src/hooks.js` — your app's hooks that run on both the client and server
+- `src/hooks.server.js` — 서버 사이드에서 실행되는 hooks
+- `src/hooks.client.js` — 클라이언트 사이드에서 실행되는 hooks
+- `src/hooks.js` — 서버와 클라이언트 모두에서 실행되는 hooks
 
-Code in these modules will run when the application starts up, making them useful for initializing database clients and so on.
+이 파일(모듈)들 안의 코드는 앱이 실행될 때 실행되어, 데이터베이스 클라이언트를 초기화하거나 하는 등의 작업에 유용하게 활용할 수 있습니다.
 
-> You can configure the location of these files with [`config.kit.files.hooks`](configuration#files).
+> 사용자는 이 파일들의 위치를 설정할 수 있습니다.[`config.kit.files.hooks`](configuration#files).
 
 ## Server hooks
 
-The following hooks can be added to `src/hooks.server.js`:
+'src/hooks.server.js'에 추가할 수 있는 hooks들.
 
 ### handle
 
-This function runs every time the SvelteKit server receives a [request](web-standards#fetch-apis-request) — whether that happens while the app is running, or during [prerendering](page-options#prerender) — and determines the [response](web-standards#fetch-apis-response). It receives an `event` object representing the request and a function called `resolve`, which renders the route and generates a `Response`. This allows you to modify response headers or bodies, or bypass SvelteKit entirely (for implementing routes programmatically, for example).
+이 함수는 서버가 [request](web-standards#fetch-apis-request) 요청을 받을 때 마다 실행되는데, 앱이 실행되고 있는 중간에, 혹은 
+This function runs every time the SvelteKit server receives a [request](web-standards#fetch-apis-request) — whether that happens while the app is running, or during [prerendering](page-options#prerender) — and determines the [response](web-standards#fetch-apis-response). 이 함수는 요청 내용을 담고 있는 'event' 객체와 'resolve'라는 함수를 인수로 받으며, 이들을 통해 해당 라우트를 렌더링하고 응답을 생성합니다. 이를 통해서 사용자는 응답의 헤더나 본문을 수정하거나, SveltKit을 완전히 우회하도록 할 수도 있습니다. (예를 들면 라우팅을 프로그램으로 구현하거나 할 때)
 
 ```js
 /// file: src/hooks.server.js
@@ -35,7 +37,7 @@ export async function handle({ event, resolve }) {
 }
 ```
 
-> Requests for static assets — which includes pages that were already prerendered — are _not_ handled by SvelteKit.
+> 정적 자원에 대한 요청들 - 이미 사전 렌더링이 완료된 페이지들 포함 - 은 SvelteKit에서 처리하지 _않습니다_. 
 
 If unimplemented, defaults to `({ event, resolve }) => resolve(event)`. To add custom data to the request, which is passed to handlers in `+server.js` and server `load` functions, populate the `event.locals` object, as shown below.
 
