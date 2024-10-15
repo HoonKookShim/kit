@@ -2,8 +2,8 @@
 title: Web standards
 ---
 
-Throughout this documentation, you'll see references to the standard [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) that SvelteKit builds on top of. Rather than reinventing the wheel, we _use the platform_, which means your existing web development skills are applicable to SvelteKit. Conversely, time spent learning SvelteKit will help you be a better web developer elsewhere.
-
+Throughout this documentation, you'll see references to the standard  that SvelteKit builds on top of. Rather than reinventing the wheel, we _use the platform_, which means your existing web development skills are applicable to SvelteKit. Conversely, time spent learning SvelteKit will help you be a better web developer elsewhere.
+이 문서 전체에서는, [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) 표준에 대한 리퍼런스들 제공하며, SvelteKit은  그 위에 만들어져 있습니다. 바퀴를 처음부터 새로 만드는 게 아니라, _플랫폼을 사용_ 해서 당신이 이미 가지고 있는 개발 능력은 SvelteKit에도 적용할 수 있습니다. 반대로, SvelteKit을 배우는데 여러분이 투자했던 시간은, 다른 곳에서 역시 더 나은 개발자가 되는데 도움을 줄 것입니다.
 These APIs are available in all modern browsers and in many non-browser environments like Cloudflare Workers, Deno, and Vercel Functions. During development, and in [adapters](adapters) for Node-based environments (including AWS Lambda), they're made available via polyfills where necessary (for now, that is — Node is rapidly adding support for more web standards).
 
 In particular, you'll get comfortable with the following:
