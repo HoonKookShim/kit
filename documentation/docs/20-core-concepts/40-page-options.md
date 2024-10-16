@@ -2,7 +2,7 @@
 title: Page options
 ---
 
-By default, SvelteKit will render (or [prerender](glossary#prerendering)) any component first on the server and send it to the client as HTML. It will then render the component again in the browser to make it interactive in a process called [**hydration**](glossary#hydration). For this reason, you need to ensure that components can run in both places. SvelteKit will then initialize a [**router**](routing) that takes over subsequent navigations.
+스벨트킷의 기본 설정은, 서버에서 먼저 렌더링(또는 [프리랜더링](glossary#prerendering))을 하고, 클라이언트에게는 HTML로 보내주는 것이다. 그러면 스벨트킷은 그 이후 브라우저에서 해당 컴포넌트를 상호작용이 되도록 다시 렌더링하게 되는데, 이 과정을 [**하이드레이션**](glossary#hydration).이라고 한다. 스벨트킷은 그 후에 [**라우터**](routing)를 초기화하고, 그러면 라우터는 이후의 검색을 담당하게 된다.
 
 You can control each of these on a page-by-page basis by exporting options from [`+page.js`](routing#page-page-js) or [`+page.server.js`](routing#page-page-server-js), or for groups of pages using a shared [`+layout.js`](routing#layout-layout-js) or [`+layout.server.js`](routing#layout-layout-server-js). To define an option for the whole app, export it from the root layout. Child layouts and pages override values set in parent layouts, so — for example — you can enable prerendering for your entire app then disable it for pages that need to be dynamically rendered.
 
@@ -18,6 +18,7 @@ export const prerender = true;
 ```
 
 Alternatively, you can set `export const prerender = true` in your root `+layout.js` or `+layout.server.js` and prerender everything except pages that are explicitly marked as _not_ prerenderable:
+
 
 ```js
 /// file: +page.js/+page.server.js/+server.js
