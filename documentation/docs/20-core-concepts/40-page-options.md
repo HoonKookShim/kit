@@ -9,16 +9,16 @@ You can control each of these on a page-by-page basis by exporting options from 
 
 앱의 각각의 부분들에서 이런 옵션들을 적절히 조합하고 맞추어서 사용할 수 있다. 예를 들어서 마케팅 페이지는 속도를 높이기 위해 프리랜더링을 하고, SEO와 접근을 위한 동적 페이지들은 서버사이드 렌더링을 하고, 관리 페이지들은 클라이언트에서만 렌더링되는 SPA로 전환하는 식이다. SvelteKit은 이런 특성들로 인해서 매우 다용도로 활용할 수 있다.
 
-## prerender
+## 사전 렌더링(prerender)
 
-앱 중에서, 컴파일 시에 생성된 간단한 HTML 파일을 보여주기만 하면 되는 라우터들이 있을 수 있다. 바로 이런 라우터들을 [_사전랜더링(프리랜더링)_](glossary#prerendering) 하면 되는 것이다.
+앱의 라우터들 중, 컴파일 시 단순한 HTML 파일이 생성되는 라우터들이 있을 수 있습니다. 바로 이런 라우터들을 [_사전랜더링(프리랜더링)_](glossary#prerendering)하면 됩니다.
 
 ```js
 /// file: +page.js/+page.server.js/+server.js
 export const prerender = true;
 ```
 
-다른 방법으로는, 루트 '+layout.js'나 '+layout.server.js' 파일에 'export const prerender = true'를 세팅해서 프리렌더링을 _하지 못하게_ 특별히 표시해 둔 페이지들을 제외한 모든 페이지들이 프리렌더링이 되도록 할 수 있다:
+다른 방법으로는, 루트 '+layout.js'나 '+layout.server.js' 파일에 'export const prerender = true'를 세팅해서 프리렌더링을 _하지 못하게_ 따로 표시해 둔 페이지들을 제외한 모든 페이지들이 프리렌더링이 되도록 할 수 있습니다.:
 
 ```js
 /// file: +page.js/+page.server.js/+server.js
@@ -33,7 +33,7 @@ Routes with `prerender = true` will be excluded from manifests used for dynamic 
 export const prerender = 'auto';
 ```
 
-> 전체 앱이 사전렌더링에 적합하다면, [`adapter-static`](https://github.com/sveltejs/kit/tree/main/packages/adapter-static)을 사용해서 어떤 정적 웹서버에도 사용할 수 있는 정적 파일들을 출력할 수 있다.
+> 전체 앱이 사전렌더링에 적합하다면, [`adapter-static`](https://github.com/sveltejs/kit/tree/main/packages/adapter-static)을 사용해서 다른 아무 정적 웹서버에도 사용할 수 있는 정적 파일들을 출력할 수 있습니다.
 
 The prerenderer will start at the root of your app and generate files for any prerenderable pages or `+server.js` routes it finds. Each page is scanned for `<a>` elements that point to other pages that are candidates for prerendering — because of this, you generally don't need to specify which pages should be accessed. If you _do_ need to specify which pages should be accessed by the prerenderer, you can do so with [`config.kit.prerender.entries`](configuration#prerender), or by exporting an [`entries`](#entries) function from your dynamic route.
 사전랜더링 엔진은 앱의 루트에서부터 시작해서 프리랜더링이 가능한 파일이나 '+server.js' 라우트를 찾아서 파일들을 만듭니다. 각 페이들에서 다른 페이지로 연결되는 <a> 요소들을 스캔해서 찾고(이것들이 사전 렌더링의 후보들이 됩니다.)
@@ -43,7 +43,8 @@ While prerendering, the value of `building` imported from [`$app/environment`](m
 
 ### Prerendering server routes
 
-Unlike the other page options, `prerender` also applies to `+server.js` files. These files are _not_ affected by layouts, but will inherit default values from the pages that fetch data from them, if any. For example if a `+page.js` contains this `load` function...
+These files are _not_ affected by layouts, but will inherit default values from the pages that fetch data from them, if any.
+다른 페이지 선택사항들과는 다른 점이, 'prerender' 옵션은 '+server.js' 파일에도 적용된다는 것입니다. 이 파일들은 레이아웃에 영향을 받지 _않지만_ 레이아웃에서 fetch해서 받아온 데이터들로부터 기본값을 상속받습니다. 예를 들어서, '+page.js' 파일이 아래와 같은 'load' 함수를 가지고 있다고 해 보면,
 
 ```js
 /// file: +page.js
@@ -56,11 +57,12 @@ export async function load({ fetch }) {
 }
 ```
 
-...then `src/routes/my-server-route.json/+server.js` will be treated as prerenderable if it doesn't contain its own `export const prerender = false`.
+...그러면 `src/routes/my-server-route.json/+server.js` 파일은 'export const prerender = 'false'가 없더라도 사전 렌더링이 가능하다고 취급될 겁니다.
+will be treated as prerenderable if it doesn't contain its own `export const prerender = false`.
 
 ### When not to prerender
 
-The basic rule is this: for a page to be prerenderable, any two users hitting it directly must get the same content from the server.
+기본쥭인 규칙은: 아무나 두 사용자가 클릭해도 서버로부터 동일한 내용이 생성되는 페이지의 경우에 '사전 렌더링'이 가능하다는 것입니다.
 
 > Not all pages are suitable for prerendering. Any content that is prerendered will be seen by all users. You can of course fetch personalized data in `onMount` in a prerendered page, but this may result in a poorer user experience since it will involve blank initial content or loading indicators.
 
@@ -68,15 +70,17 @@ Note that you can still prerender pages that load data based on the page's param
 
 Accessing [`url.searchParams`](load#using-url-data-url) during prerendering is forbidden. If you need to use it, ensure you are only doing so in the browser (for example in `onMount`).
 
-Pages with [actions](form-actions) cannot be prerendered, because a server must be able to handle the action `POST` requests.
+[actions](form-actions)이 있는 페이지의 경우에는 사전 랜더링이 불가능한데, 이는 서버가 반드시 action 'POST' 요청을 처리할 수 있어야 하기 때문입니다.
 
-### Route conflicts
+### 라우트 충돌
 
-Because prerendering writes to the filesystem, it isn't possible to have two endpoints that would cause a directory and a file to have the same name. For example, `src/routes/foo/+server.js` and `src/routes/foo/bar/+server.js` would try to create `foo` and `foo/bar`, which is impossible.
+사전 렌더링은 파일시스템에 파일을 작성하기 때문에, 디렉토리 이름과 파일 이름이 같아지게 하는 종말점을 두개를 만드는 것은 안 되는 문제가 있다. 예를 들어서, 'src/routes/foo/+server.js' 파일과 '/src/routes/foo/bar/+server.js' 파일이 있을 경우에 두 파일을 모두 사전렌더링을 하게 되면 첫번째 파일은 'foo'라는 파일을 만드려고 하고, 두번째 파일은 'foo/bar'라는 파일을 만들려고 할텐데, 이미 'foo'라는 파일이 있기에 'foo/'라는 디렉토리를 만들 수 있는 것이다.
 
-For that reason among others, it's recommended that you always include a file extension — `src/routes/foo.json/+server.js` and `src/routes/foo/bar.json/+server.js` would result in `foo.json` and `foo/bar.json` files living harmoniously side-by-side.
+다른 이유들도 있지만, 이런 이유 때문에도 항상 파일의 확장자를 (디렉토리 이름에도) 포함하는 것을 추천합니다. 'src/routes/foo.json/+server.js' 파일과 'src/routs/foo/bar.json/+server.js' 파일을 사전 랜더링을 하게 되면 각각 'foo.json' 파일과 'foo/bar.json'파일 두개가 아무 문제없이 같이 만들어지게 될 것입니다.
 
-For _pages_, we skirt around this problem by writing `foo/index.html` instead of `foo`.
+_페이지들_ 의 경우에는, 'foo'대신 '/foo/index.html'을 작성해서 이런 문제를 피할 수 있습니다.
+
+
 
 ### Troubleshooting
 
