@@ -2,23 +2,23 @@
 title: Page options
 ---
 
-스벨트킷의 기본 설정은, 서버에서 먼저 렌더링(또는 [프리랜더링](glossary#prerendering))을 하고, 클라이언트에게는 HTML로 보내주는 것이다. 그러면 스벨트킷은 그 이후 브라우저에서 해당 컴포넌트를 상호작용이 되도록 다시 렌더링하게 되는데, 이 과정을 [**하이드레이션**](glossary#hydration).이라고 한다. 스벨트킷은 그 후에 [**라우터**](routing)를 초기화하고, 그러면 라우터는 이후의 검색을 담당하게 된다.
+스벨트킷의 기본 설정은, 서버에서 먼저 렌더링(또는 [프리랜더링](glossary#prerendering))을 하고, 클라이언트에게는 HTML로 보내주는 것이다. 그러면 그 이후에 스벨트킷은 사용자와 상호 작용이 가능하도록 브라우저에서 해당 컴포넌트를 다시 렌더링하게 되는데, 이 과정을 [**하이드레이션**](glossary#hydration).이라고 한다. 그래서 프로그래머는 컴포넌트들이 두 곳 모두에서 실행이 가능하도록 확인할 필요가 있다. 스벨트킷은 그 후에 [**라우터**](routing)를 초기화하고, 그러면 라우터는 이후의 네비게이션을 담당하게 된다.
 
-You can control each of these on a page-by-page basis by exporting options from [`+page.js`](routing#page-page-js) or [`+page.server.js`](routing#page-page-server-js), or for groups of pages using a shared [`+layout.js`](routing#layout-layout-js) or [`+layout.server.js`](routing#layout-layout-server-js). To define an option for the whole app, export it from the root layout. Child layouts and pages override values set in parent layouts, so — for example — you can enable prerendering for your entire app then disable it for pages that need to be dynamically rendered.
+You can control each of these on a page-by-page basis by exporting options from , or for groups of pages using a shared [`+layout.js`](routing#layout-layout-js) or [`+layout.server.js`](routing#layout-layout-server-js). To define an option for the whole app, export it from the root layout. Child layouts and pages override values set in parent layouts, so — for example — you can enable prerendering for your entire app then disable it for pages that need to be dynamically rendered.
+이 각각의 과정들은 페이지별로 조절이 가능하고, [`+page.js`](routing#page-page-js) 파일이나 [`+page.server.js`](routing#page-page-server-js) 파일에서 옵션을 export 하면 되는 것이다. 여러 페이지들을 그룹별로 조절도 가능하다.
 
-You can mix and match these options in different areas of your app. For example you could prerender your marketing page for maximum speed, server-render your dynamic pages for SEO and accessibility and turn your admin section into an SPA by rendering it on the client only. This makes SvelteKit very versatile.
+앱의 각각의 부분들에서 이런 옵션들을 적절히 조합하고 맞추어서 사용할 수 있다. 예를 들어서 마케팅 페이지는 속도를 높이기 위해 프리랜더링을 하고, SEO와 접근을 위한 동적 페이지들은 서버사이드 렌더링을 하고, 관리 페이지들은 클라이언트에서만 렌더링되는 SPA로 전환하는 식이다. SvelteKit은 이런 특성들로 인해서 매우 다용도로 활용할 수 있다.
 
 ## prerender
 
-It's likely that at least some routes of your app can be represented as a simple HTML file generated at build time. These routes can be [_prerendered_](glossary#prerendering).
+앱 중에서, 컴파일 시에 생성된 간단한 HTML 파일을 보여주기만 하면 되는 라우터들이 있을 수 있다. 바로 이런 라우터들을 [_사전랜더링(프리랜더링)_](glossary#prerendering) 하면 되는 것이다.
 
 ```js
 /// file: +page.js/+page.server.js/+server.js
 export const prerender = true;
 ```
 
-Alternatively, you can set `export const prerender = true` in your root `+layout.js` or `+layout.server.js` and prerender everything except pages that are explicitly marked as _not_ prerenderable:
-
+다른 방법으로는, 루트 '+layout.js'나 '+layout.server.js' 파일에 'export const prerender = true'를 세팅해서 프리렌더링을 _하지 못하게_ 특별히 표시해 둔 페이지들을 제외한 모든 페이지들이 프리렌더링이 되도록 할 수 있다:
 
 ```js
 /// file: +page.js/+page.server.js/+server.js
@@ -26,15 +26,18 @@ export const prerender = false;
 ```
 
 Routes with `prerender = true` will be excluded from manifests used for dynamic SSR, making your server (or serverless/edge functions) smaller. In some cases you might want to prerender a route but also include it in the manifest (for example, with a route like `/blog/[slug]` where you want to prerender your most recent/popular content but server-render the long tail) — for these cases, there's a third option, 'auto':
+'prerender = true'가 주어진 라우트는, 동적 서버
 
 ```js
 /// file: +page.js/+page.server.js/+server.js
 export const prerender = 'auto';
 ```
 
-> If your entire app is suitable for prerendering, you can use [`adapter-static`](https://github.com/sveltejs/kit/tree/main/packages/adapter-static), which will output files suitable for use with any static webserver.
+> 전체 앱이 사전렌더링에 적합하다면, [`adapter-static`](https://github.com/sveltejs/kit/tree/main/packages/adapter-static)을 사용해서 어떤 정적 웹서버에도 사용할 수 있는 정적 파일들을 출력할 수 있다.
 
 The prerenderer will start at the root of your app and generate files for any prerenderable pages or `+server.js` routes it finds. Each page is scanned for `<a>` elements that point to other pages that are candidates for prerendering — because of this, you generally don't need to specify which pages should be accessed. If you _do_ need to specify which pages should be accessed by the prerenderer, you can do so with [`config.kit.prerender.entries`](configuration#prerender), or by exporting an [`entries`](#entries) function from your dynamic route.
+사전랜더링 엔진은 앱의 루트에서부터 시작해서 프리랜더링이 가능한 파일이나 '+server.js' 라우트를 찾아서 파일들을 만듭니다. 각 페이들에서 다른 페이지로 연결되는 <a> 요소들을 스캔해서 찾고(이것들이 사전 렌더링의 후보들이 됩니다.)
+
 
 While prerendering, the value of `building` imported from [`$app/environment`](modules#$app-environment) will be `true`.
 
