@@ -6,7 +6,8 @@ You can use SvelteKit to build apps as well as component libraries, using the `@
 
 When you're creating an app, the contents of `src/routes` is the public-facing stuff; [`src/lib`](modules#$lib) contains your app's internal library.
 
-A component library has the exact same structure as a SvelteKit app, except that `src/lib` is the public-facing bit, and your root `package.json` is used to publish the package. `src/routes` might be a documentation or demo site that accompanies the library, or it might just be a sandbox you use during development.
+
+하나의 컴포넌트 라이브러리는 스벨트킷 앱과 한가지를 제외하고는 완전히 동일한 구조를 가지고 있는데, 그것은 ('src/routes' 폴더가 아닌) 'src/lib' 폴더가 외부로 공개되는 부분이며, 루트에 있는 package.json 파일로 해당 패키지를 publish한다는 점이다. 'src/routes' 폴더에는 문서들이나, 혹은 해당 라이브러리를 사용하는 데모 사이트, 혹은 단지 개발 중에 사용하는 샌드박스 같은 것들이 들어갈 수 있다.
 
 Running the `svelte-package` command from `@sveltejs/package` will take the contents of `src/lib` and generate a `dist` directory (which can be [configured](#options)) containing the following:
 
@@ -17,11 +18,12 @@ Running the `svelte-package` command from `@sveltejs/package` will take the cont
 
 ## Anatomy of a package.json
 
-Since you're now building a library for public use, the contents of your `package.json` will become more important. Through it, you configure the entry points of your package, which files are published to npm, and which dependencies your library has. Let's go through the most important fields one by one.
+
+다른 사람들이 사용할 수 있는 라이브러리를 만드는 것이기 때문에, 'package.json' 파일이 더 중요한 의미를 가지게 됩니다. 이 파일을 통해서 패키지의 시작지점, npm에 어떤 파일들이 publish될 지, 해당 라이브러리가 어떤 의존성을 가지고 있는지 등을 설정합니다. 이제 제일 중요한 부분들을 하나씩 살펴봅시다.
 
 ### name
 
-This is the name of your package. It will be available for others to install using that name, and visible on `https://npmjs.com/package/<name>`.
+이것은 패키지의 이름입니다. 다른 사람들이 패키지를 설치하는데 이 이름을 사용하고, `https://npmjs.com/package/<name>'에서 해당 패키지를 찾아봅니다.
 
 ```json
 {
