@@ -21,8 +21,7 @@ title: Hooks
 
 ### handle
 
-이 함수는 서버가 [request](web-standards#fetch-apis-request) 요청을 받을 때 마다 실행되는데, 앱이 실행되고 있는 중간에, 혹은 
-This function runs every time the SvelteKit server receives a [request](web-standards#fetch-apis-request) — whether that happens while the app is running, or during [prerendering](page-options#prerender) — and determines the [response](web-standards#fetch-apis-response). 이 함수는 요청 내용을 담고 있는 'event' 객체와 'resolve'라는 함수를 인수로 받으며, 이들을 통해 해당 라우트를 렌더링하고 응답을 생성합니다. 이를 통해서 사용자는 응답의 헤더나 본문을 수정하거나, SveltKit을 완전히 우회하도록 할 수도 있습니다. (예를 들면 라우팅을 프로그램으로 구현하거나 할 때)
+이 함수는 서버가 [요청(request)](web-standards#fetch-apis-request)을 받을 때 마다 실행되는데 - 앱이 실행되고 있는 중간에 발생하는지 아니면 [사전 렌더링(prerendering)](page-options#prerender) 중에 발생하는지에 따라 - [응답(response)](web-standards#fetch-apis-response)'을 결정합니다. 이 함수는 요청 내용을 담고 있는 'event' 객체와 'resolve'라는 함수를 인수로 받으며, 이들을 통해 해당 라우트를 렌더링하고 응답을 생성합니다. 이를 통해서 사용자는 응답의 헤더나 본문을 수정하거나, SveltKit을 완전히 우회하도록 할 수도 있습니다. (예를 들면 라우팅을 프로그램으로 구현하거나 할 때)
 
 ```js
 /// file: src/hooks.server.js
