@@ -6,7 +6,7 @@ Before a [`+page.svelte`](routing#page-page.svelte) component (and its containin
 
 ## Page data
 
-A `+page.svelte` file can have a sibling `+page.js` that exports a `load` function, the return value of which is available to the page via the `data` prop:
+`+page.svelte` 파일과 더불어 `+page.js`라는 형제 파일을 작성할 수 있는데, 그 파일은 `load`라는 함수를 export 합니다. 그 함수의 리턴값은 'data' prop을 통해서 페이지에서 사용할 수 있습니다.:
 
 ```js
 /// file: src/routes/blog/[slug]/+page.js
@@ -33,9 +33,9 @@ export function load({ params }) {
 ```
 
 > [!LEGACY]
-> In Svelte 4, you'd use `export let data` instead
+> 스벨트 4에서는, `export let data`를 사용해서 data를 받아왔습니다.
 
-Thanks to the generated `$types` module, we get full type safety.
+`$types` 모듈 덕분에, 완전히 형 안전할 수 있습니다.
 
 A `load` function in a `+page.js` file runs both on the server and in the browser (unless combined with `export const ssr = false`, in which case it will [only run in the browser](page-options#ssr)). If your `load` function should _always_ run on the server (because it uses private environment variables, for example, or accesses a database) then it would go in a `+page.server.js` instead.
 
@@ -139,9 +139,9 @@ Data returned from layout `load` functions is available to child `+layout.svelte
 
 ## $page.data
 
-The `+page.svelte` component, and each `+layout.svelte` component above it, has access to its own data plus all the data from its parents.
+`+page.svelte` 컴포넌트와, 그 위에 존재하는 각각의 `+layout.svelte` 컴포넌트들은, has access to its own data plus all the data from its parents.
 
-In some cases, we might need the opposite — a parent layout might need to access page data or data from a child layout. For example, the root layout might want to access a `title` property returned from a `load` function in `+page.js` or `+page.server.js`. This can be done with `$page.data`:
+어떤 경우에는, 반대가 필요할 수 있습니다. — 부모 레이아웃에서 페이지의 데이터, 혹은 자식 레이아웃으로부터의 데이터에 접근할 필요 말입니다. 예를 들어서, `+page.js` 파일이나 `+page.server.js` 파일의 load 함수가 반환한 `title` 프로퍼티를 루트 레이아웃에서 가져와야 할 때가 있겠네요For example, the root layout might want to access a `title` property returned from a `load` function in `+page.js` or `+page.server.js`. 이런 작업은 `$page.data`을 통해 이루어질 수 있습니다:
 
 ```svelte
 <!--- file: src/routes/+layout.svelte --->
@@ -154,7 +154,7 @@ In some cases, we might need the opposite — a parent layout might need to acce
 </svelte:head>
 ```
 
-Type information for `$page.data` is provided by `App.PageData`.
+`$page.data`에 대한 '형정보'는 `App.PageData`가 제공합니다.
 
 ## Universal vs server
 
